@@ -39,7 +39,7 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     void getAccessToken() throws Exception {
         String url = "http://backend-gateway-client:8080/auth/realms/ITM/protocol/openid-connect/token";
 
-        // Устанавливаем заголовки
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -77,7 +77,6 @@ public class UserControllerIntegrationTest extends BaseIntegrationTest {
     }
 
 
-    //получения пользователя
     @Test
     @WithMockUser(username = "user", roles = {"MODERATOR"})
     public void testGetUserById_ShouldReturnUserDetails_WhenUserExists() throws Exception {
