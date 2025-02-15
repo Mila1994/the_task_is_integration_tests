@@ -23,20 +23,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @AutoConfigureMockMvc
 @Testcontainers
 public abstract class BaseIntegrationTest {
-
     @Container
     static DockerComposeContainer<?> environment =
             new DockerComposeContainer<>(new File("src/test/docker-compose-test.yml"))
                     .withExposedService("db", 5432)
                     .withExposedService("kc", 8080);
-
-    private final ObjectWriter contentWriter = new ObjectMapper()
-            .configure(SerializationFeature.WRAP_ROOT_VALUE, false)
-            .writer()
-            .withDefaultPrettyPrinter();
-
-    @Autowired
-    protected MockMvc mvc;
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
@@ -47,17 +38,5 @@ public abstract class BaseIntegrationTest {
         registry.add("spring.datasource.username", () -> "my_admin");
         registry.add("spring.datasource.password", () -> "my_password");
         registry.add("keycloak.realm", () -> "ITM");
-    }
-
-
-    protected MockHttpServletRequestBuilder requestToJson(MockHttpServletRequestBuilder requestBuilder) {
-        return requestBuilder
-                .contentType(APPLICATION_JSON);
-    }
-
-
-    protected MockHttpServletRequestBuilder requestWithContent(MockHttpServletRequestBuilder requestBuilder,
-                                                               Object content) throws JsonProcessingException {
-        return requestToJson(requestBuilder).content(contentWriter.writeValueAsString(content));
     }
 }
